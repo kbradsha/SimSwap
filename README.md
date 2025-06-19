@@ -4,8 +4,6 @@
 
 **Our method can realize **arbitrary face swapping** on images and videos with **one single trained model**.**
 
-***We are recruiting full-time engineers. If you are interested, please send an [email](mailto:chen19910528@sjtu.edu.cn?subject=[GitHub]%20Source%20Han%20Sans) to my team. Please refer to the website for specific recruitment conditions: [Requirements](https://join.sjtu.edu.cn/Admin/QsPreview.aspx?qsid=44f5413a90974114b8f5e643177ef32d)***
-
 Training and test code are now available!
 [ <a href="https://colab.research.google.com/github/neuralchen/SimSwap/blob/main/train.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>](https://colab.research.google.com/github/neuralchen/SimSwap/blob/main/train.ipynb)
 
@@ -88,6 +86,12 @@ Friendly reminder, due to the difference in training settings, the user-trained 
 
 - Train 224 models with VGGFace2 224*224 [[Google Driver] VGGFace2-224 (10.8G)](https://drive.google.com/file/d/19pWvdEHS-CEG6tW3PdxdtZ5QEymVjImc/view?usp=sharing) [[Baidu Driver] ](https://pan.baidu.com/s/1OiwLJHVBSYB4AY2vEcfN0A) [Password: lrod]
 
+*********
+Use the pre-trained 512 models instead.
+python3 test_video_swapsingle.py --pic_a_path=./crop_512/kamala_512_1.png --pic_b_path=./crop_512/kamala_512_2.png --video_path=./demo_file/ca.mp4 --pic_specific_path=./crop_512/ --crop_size 512 --output_path=./output/result.mp4
+*********
+
+
 For faster convergence and better results, a large batch size (more than 16) is recommended!
 
 ***We recommend training more than 400K iterations (batch size is 16), 600K~800K will be better, more iterations will not be recommended.***
@@ -95,6 +99,7 @@ For faster convergence and better results, a large batch size (more than 16) is 
 
 ```
 python train.py --name simswap224_test --batchSize 8  --gpu_ids 0 --dataset /path/to/VGGFace2HQ --Gdeep False
+python3 train.py --name simswap224_test --gpu_ids 0 --dataset ../models/SimSwap2/vggface2_crop_arcfacealign_224/ --Gdeep False
 ```
 
 [Colab demo for training 224 model][ <a href="https://colab.research.google.com/github/neuralchen/SimSwap/blob/main/train.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>](https://colab.research.google.com/github/neuralchen/SimSwap/blob/main/train.ipynb)
@@ -171,7 +176,7 @@ At the same time, if you have suggestions for our project, please feel free to a
 For academic and non-commercial use only.The whole project is under the CC-BY-NC 4.0 license. See [LICENSE](https://github.com/neuralchen/SimSwap/blob/main/LICENSE) for additional details.
 
 
-## To cite our papers
+## To cite our paper
 ```
 @inproceedings{DBLP:conf/mm/ChenCNG20,
   author    = {Renwang Chen and
@@ -181,22 +186,6 @@ For academic and non-commercial use only.The whole project is under the CC-BY-NC
   title     = {SimSwap: An Efficient Framework For High Fidelity Face Swapping},
   booktitle = {{MM} '20: The 28th {ACM} International Conference on Multimedia},
   year      = {2020}
-}
-```
-```
-@Article{simswapplusplus,
-    author  = {Xuanhong Chen and
-              Bingbing Ni and
-              Yutian Liu and
-              Naiyuan Liu and
-              Zhilin Zeng and
-              Hang Wang},
-    title   = {SimSwap++: Towards Faster and High-Quality Identity Swapping},
-    journal = {{IEEE} Trans. Pattern Anal. Mach. Intell.},
-    volume  = {46},
-    number  = {1},
-    pages   = {576--592},
-    year    = {2024}
 }
 ```
 

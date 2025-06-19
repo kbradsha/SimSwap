@@ -48,6 +48,7 @@ if __name__ == '__main__':
     if crop_size == 512:
         opt.which_epoch = 550000
         opt.name = '512'
+        opt.weights_only = 'False'
         mode = 'ffhq'
     else:
         mode = 'None'
@@ -59,23 +60,33 @@ if __name__ == '__main__':
     app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640),mode=mode)
     with torch.no_grad():
         pic_a = opt.pic_a_path
-        # img_a = Image.open(pic_a).convert('RGB')
+        img_a = Image.open(pic_a).convert('RGB')
         img_a_whole = cv2.imread(pic_a)
-        img_a_align_crop, _ = app.get(img_a_whole,crop_size)
+        result = app.get(img_a_whole, crop_size)
+        if result is None:
+            raise ValueError("No face detected in pic_a_path")
+        img_a_align_crop, _ = result
+#        img_a_align_crop, _ = app.get(img_a_whole,crop_size)
         img_a_align_crop_pil = Image.fromarray(cv2.cvtColor(img_a_align_crop[0],cv2.COLOR_BGR2RGB)) 
         img_a = transformer_Arcface(img_a_align_crop_pil)
         img_id = img_a.view(-1, img_a.shape[0], img_a.shape[1], img_a.shape[2])
 
-        # pic_b = opt.pic_b_path
-        # img_b_whole = cv2.imread(pic_b)
-        # img_b_align_crop, b_mat = app.get(img_b_whole,crop_size)
-        # img_b_align_crop_pil = Image.fromarray(cv2.cvtColor(img_b_align_crop,cv2.COLOR_BGR2RGB)) 
-        # img_b = transformer(img_b_align_crop_pil)
-        # img_att = img_b.view(-1, img_b.shape[0], img_b.shape[1], img_b.shape[2])
+        pic_b = opt.pic_b_path
+        img_b = Image.open(pic_b).convert('RGB')
+        img_b_whole = cv2.imread(pic_b)
+        result = app.get(img_b_whole, crop_size)
+        if result is None:
+            raise ValueError("No face detected in pic_b_path")
+        img_b_align_crop, b_mat = result
+        img_b_align_crop = np.array(img_b_align_crop)  # Add this line
+#        img_b_align_crop, b_mat = app.get(img_b_whole,crop_size)
+        img_b_align_crop_pil = Image.fromarray(cv2.cvtColor(img_b_align_crop,cv2.COLOR_BGR2RGB)) 
+        img_b = transformer(img_b_align_crop_pil)
+        img_att = img_b.view(-1, img_b.shape[0], img_b.shape[1], img_b.shape[2])
 
         # convert numpy to tensor
         img_id = img_id.cuda()
-        # img_att = img_att.cuda()
+        img_att = img_att.cuda()
 
         #create latent id
         img_id_downsample = F.interpolate(img_id, size=(112,112))
